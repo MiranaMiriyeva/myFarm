@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Farm</title>
+  </head>
+  <body>
+    <div class="mainContainer">
+      <div class="animals">
+        <div class="sheepHeading animal">
+          <img
+            src="https://cdn-icons-png.flaticon.com/128/7923/7923884.png"
+            alt=""
+          />
+          <p class="animalCount">1</p>
+        </div>
+        <div class="cowHeading animal">
+          <img
+            src="https://cdn-icons-png.flaticon.com/128/2523/2523618.png"
+            alt=""
+          />
+          <p class="animalCount">3</p>
+        </div>
+        <div class="chickenHeading animal">
+          <img
+            src="https://cdn-icons-png.flaticon.com/128/4866/4866870.png"
+            alt=""
+          />
+          <p class="animalCount">2</p>
+        </div>
+      </div>
+      <div class="informations">
+        <div class="coin">
+          <img
+            src="https://cdn-icons-png.flaticon.com/128/10095/10095056.png"
+            alt=""
+          />
+          <p class="coinCount">0</p>
+        </div>
+        <div class="feedings">
+          <img
+            src="https://cdn-icons-png.flaticon.com/128/3061/3061466.png"
+            alt=""
+          />
+          <p class="feedingCount">100</p>
+        </div>
+        <div class="earningCoin">
+          Earing Coin: <span class="earningCoinCoint">5</span>
+        </div>
+        <div class="expenseFeeding">
+          Expense Feeding: <span class="expenseFeedingCoint">3</span>
+        </div>
+      </div>
+
+      <div class="buyAnimalBtn">Buy Animal</div>
+      <div class="buyFoodBtn">Buy Food</div>
+
+      <div class="buyAnimalModal">
+        <div class="animalModalContainer">
+          <h2>BUY ANIMAL</h2>
+          <div class="animalConatiner">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/4866/4866870.png"
+              alt=""
+            />
+            <div>
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/10095/10095056.png"
+                alt=""
+              />
+              <p>10</p>
+              <button id="chicken" class="buyTheAnimal">BUY</button>
+            </div>
+          </div>
+          <div class="animalConatiner">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/7923/7923884.png"
+              alt=""
+            />
+            <div>
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/10095/10095056.png"
+                alt=""
+              />
+              <p>20</p>
+              <button id="sheep" class="buyTheAnimal">BUY</button>
+            </div>
+          </div>
+          <div class="animalConatiner">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/2523/2523618.png"
+              alt=""
+            />
+            <div>
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/10095/10095056.png"
+                alt=""
+              />
+              <p>40</p>
+              <button id="cow" class="buyTheAnimal">BUY</button>
+            </div>
+          </div>
+          <div class="closeAnimalModal">X</div>
+        </div>
+      </div>
+      <div class="buyFeedingModal">
+        <div class="feedingModalContainer">
+          <h2>BUY Feeding</h2>
+          <div class="feedingConatiner">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/427/427527.png"
+              alt=""
+            />
+
+            <span>50kg</span>
+            <div>
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/10095/10095056.png"
+                alt=""
+              />
+              <p>10</p>
+              <button id="50" class="buyFeedings">BUY</button>
+            </div>
+          </div>
+          <div class="feedingConatiner">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/7625/7625138.png"
+              alt=""
+            />
+            <span> 100kg</span>
+            <div>
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/10095/10095056.png"
+                alt=""
+              />
+              <p>18</p>
+              <button id="100" class="buyFeedings">BUY</button>
+            </div>
+          </div>
+          <div class="feedingConatiner">
+            <img
+              src="https://cdn-icons-png.flaticon.com/128/3061/3061466.png"
+              alt=""
+            />
+            <span>500kg</span>
+            <div>
+              <img
+                src="https://cdn-icons-png.flaticon.com/128/10095/10095056.png"
+                alt=""
+              />
+              <p>80</p>
+              <button id="500" class="buyFeedings">BUY</button>
+            </div>
+          </div>
+
+          <div class="closeFeedingModal">X</div>
+        </div>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
