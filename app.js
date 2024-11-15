@@ -27,7 +27,7 @@ let animalsArr = [
     count: 1,
     value: 5,
     feedingKg: 3,
-    img: "https://cdn-icons-png.flaticon.com/128/2931/2931515.png",
+    img: "https://i.pinimg.com/originals/77/be/45/77be45145d0f912de33ed819b1a6fae7.gif",
   },
   {
     name: "chicken",
@@ -35,7 +35,7 @@ let animalsArr = [
     count: 0,
     value: 2,
     feedingKg: 1,
-    img: "https://cdn-icons-png.flaticon.com/128/1886/1886890.png",
+    img: "https://i.pinimg.com/originals/46/4e/88/464e88b64ed00fa395b38b23da0aa4c4.gif",
   },
   {
     name: "cow",
@@ -43,7 +43,7 @@ let animalsArr = [
     count: 0,
     feedingKg: 4,
     value: 10,
-    img: "https://cdn-icons-png.flaticon.com/128/2395/2395796.png",
+    img: "https://i.gifer.com/Za9e.gif",
   },
 ];
 // LOCAL STRORAGE
