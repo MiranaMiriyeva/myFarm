@@ -127,6 +127,19 @@
   animation-iteration-count: infinite;
   cursor: pointer;
 }
+.info_btn {
+  border-radius: 50%;
+  background-color: #fff;
+  margin: 10px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+.info_btn img {
+  width: 15px;
+  height: 15px;
+  /* padding: 10px; */
+}
 @keyframes buyAnimalAnimation {
   0% {
     top: 50%;
@@ -405,6 +418,37 @@
   border: 1px solid red;
   color: red;
   cursor: pointer;
+}
+.info_modal {
+  background-color: #fff;
+  width: 400px;
+  max-height: 500px;
+  padding: 20px;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition-duration: 400ms;
+  z-index: 9;
+}
+
+.info_modal p {
+  margin: 10px 10px;
+}
+.info_modal .close_info_btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 8px;
+  border-radius: 50%;
+  border: 1px solid red;
+  color: red;
+  cursor: pointer;
+  background-color: #fff;
 }
 .decoration {
   cursor: grab;

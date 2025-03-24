@@ -13,6 +13,10 @@ let buyFeedings = document.querySelectorAll(".buyFeedings");
 let buyDecorationBtn = document.querySelector(".buyDecorationBtn");
 let buyDecorationModal = document.querySelector(".buyDecorationModal");
 let closeDecorationModalBtn = document.querySelector(".closeDecorationModal");
+let infoBtn = document.querySelector(".info_btn");
+let infoModal = document.querySelector(".info_modal");
+let closeInfoBtn = document.querySelector(".close_info_btn");
+
 let earningCoinCoint = document.querySelector(".earningCoinCoint");
 let expenseFeedingCoint = document.querySelector(".expenseFeedingCoint");
 let coinCount = document.querySelector(".coinCount");
@@ -59,11 +63,8 @@ let animalsArr = [
   },
 ];
 
-// Function to get random position in bottom 60% of screen
 function getRandomPosition() {
-  // 40% to 95% for top position (avoid top 40%)
   const top = 40 + Math.random() * 55;
-  // 5% to 95% for left position
   const left = 5 + Math.random() * 90;
   return { top, left };
 }
@@ -89,9 +90,7 @@ if (JSON.parse(localStorage.getItem("animalsArr"))) {
         break;
     }
 
-    // Create animals with their saved positions
     animal.positions.forEach((pos) => {
-      // Ensure saved positions are in bottom 60%
       const safeTop = Math.max(40, pos.top);
       createAnimalImage(animal.img, pos.left, safeTop);
     });
@@ -114,19 +113,16 @@ if (localStorage.getItem("expenseFeedingCointValue")) {
   expenseFeedingCoint.innerHTML = expenseFeedingCointValue;
 }
 
-// Function to create animal image with drag functionality
 function createAnimalImage(imgSrc, left = null, top = null) {
   let image = document.createElement("img");
   mainContainer.appendChild(image);
   image.src = imgSrc;
   image.classList.add("animalImg");
 
-  // Set position (use random position in bottom 60% if not provided)
   const position = left && top ? { left, top } : getRandomPosition();
   image.style.left = `${position.left}%`;
   image.style.top = `${position.top}%`;
 
-  // Make draggable
   image.draggable = true;
   image.style.cursor = "grab";
   image.style.position = "absolute";
@@ -134,39 +130,33 @@ function createAnimalImage(imgSrc, left = null, top = null) {
   image.style.height = "auto";
   image.style.zIndex = "1";
 
-  // Drag start event
   image.addEventListener("dragstart", function (e) {
     e.dataTransfer.setData("text/plain", "");
     this.style.cursor = "grabbing";
     this.style.zIndex = 1000;
 
-    // Store initial position
     this.startX = e.clientX;
     this.startY = e.clientY;
     this.initialLeft = parseInt(this.style.left);
     this.initialTop = parseInt(this.style.top);
   });
 
-  // Drag end event
   image.addEventListener("dragend", function (e) {
     this.style.cursor = "grab";
     this.style.zIndex = "1";
 
-    // Calculate new position
     let deltaX = e.clientX - this.startX;
     let deltaY = e.clientY - this.startY;
 
     let newLeft = this.initialLeft + (deltaX / window.innerWidth) * 100;
     let newTop = this.initialTop + (deltaY / window.innerHeight) * 100;
 
-    // Boundary checking (keep within container and bottom 60%)
     newLeft = Math.max(0, Math.min(95, newLeft));
-    newTop = Math.max(40, Math.min(95, newTop)); // Minimum 40% from top
+    newTop = Math.max(40, Math.min(95, newTop));
 
     this.style.left = `${newLeft}%`;
     this.style.top = `${newTop}%`;
 
-    // Update position in animalsArr
     updateAnimalPosition(this.src, newLeft, newTop);
     updateLocalStorage();
   });
@@ -174,7 +164,6 @@ function createAnimalImage(imgSrc, left = null, top = null) {
   return image;
 }
 
-// Update animal position in animalsArr
 function updateAnimalPosition(imgSrc, left, top) {
   animalsArr.forEach((animal) => {
     if (imgSrc.includes(animal.name)) {
@@ -205,6 +194,11 @@ buyDecorationBtn.addEventListener("click", function () {
   buyDecorationModal.style.visibility = "visible";
   clickAudio.play();
 });
+infoBtn.addEventListener("click", function () {
+  infoModal.style.opacity = "1";
+  infoModal.style.visibility = "visible";
+  clickAudio.play();
+});
 closeAnimalModalBtn.addEventListener("click", function () {
   buyAnimalModal.style.opacity = "0";
   buyAnimalModal.style.visibility = "hidden";
@@ -220,6 +214,12 @@ closeDecorationModalBtn.addEventListener("click", function () {
   buyDecorationModal.style.visibility = "hidden";
   clickAudio.play();
 });
+closeInfoBtn.addEventListener("click", function () {
+  infoModal.style.opacity = "0";
+  infoModal.style.visibility = "hidden";
+  clickAudio.play();
+});
+
 usingInterval();
 
 // BUY ANIMALS
@@ -232,7 +232,6 @@ buyTheAnimal.forEach((btn) => {
           coinCountValue = coinCountValue - animal.price;
           animal.count++;
 
-          // Get position in bottom 60% of screen
           const position = getRandomPosition();
           animal.positions.push({ left: position.left, top: position.top });
 
@@ -257,7 +256,6 @@ buyTheAnimal.forEach((btn) => {
               break;
           }
 
-          // Create the new animal with drag functionality
           createAnimalImage(animal.img, position.left, position.top);
 
           earningCoinCointValue = 0;
@@ -353,7 +351,6 @@ buyDecorations.forEach((btn, index) => {
       decoration.classList.add("decoration");
       decoration.draggable = true;
 
-      // Position in bottom 60% of screen
       const position = getRandomPosition();
       decoration.style.position = "absolute";
       decoration.style.top = `${position.top}%`;
@@ -380,7 +377,7 @@ buyDecorations.forEach((btn, index) => {
         let newLeft = this.initialLeft + (deltaX / window.innerWidth) * 100;
         let newTop = this.initialTop + (deltaY / window.innerHeight) * 100;
         newLeft = Math.max(0, Math.min(90, newLeft));
-        newTop = Math.max(40, Math.min(90, newTop)); // Minimum 40% from top
+        newTop = Math.max(40, Math.min(90, newTop));
         this.style.left = `${newLeft}%`;
         this.style.top = `${newTop}%`;
       });
