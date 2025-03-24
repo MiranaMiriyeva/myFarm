@@ -16,6 +16,7 @@ let closeDecorationModalBtn = document.querySelector(".closeDecorationModal");
 let infoBtn = document.querySelector(".info_btn");
 let infoModal = document.querySelector(".info_modal");
 let closeInfoBtn = document.querySelector(".close_info_btn");
+let buyDecorations = document.querySelectorAll(".buyDecorations");
 
 let earningCoinCoint = document.querySelector(".earningCoinCoint");
 let expenseFeedingCoint = document.querySelector(".expenseFeedingCoint");
@@ -63,269 +64,9 @@ let animalsArr = [
   },
 ];
 
-function getRandomPosition() {
-  const top = 40 + Math.random() * 55;
-  const left = 5 + Math.random() * 90;
-  return { top, left };
-}
-
-// LOCAL STORAGE
-if (JSON.parse(localStorage.getItem("animalsArr"))) {
-  animalsArr = JSON.parse(localStorage.getItem("animalsArr"));
-  animalsArr.forEach((animal) => {
-    switch (animal.name) {
-      case "chicken":
-        chickenHeading.children[1].textContent = animal.count;
-        chickenHeading.style.display = "flex";
-        break;
-      case "sheep":
-        sheepHeading.children[1].textContent = animal.count;
-        sheepHeading.style.display = "flex";
-        break;
-      case "cow":
-        cowHeading.children[1].textContent = animal.count;
-        cowHeading.style.display = "flex";
-        break;
-      default:
-        break;
-    }
-
-    animal.positions.forEach((pos) => {
-      const safeTop = Math.max(40, pos.top);
-      createAnimalImage(animal.img, pos.left, safeTop);
-    });
-  });
-}
-if (localStorage.getItem("coinCount")) {
-  coinCountValue = +localStorage.getItem("coinCount");
-  coinCount.innerHTML = coinCountValue;
-}
-if (localStorage.getItem("feedingCount")) {
-  feedingCountValue = +localStorage.getItem("feedingCount");
-  feedingCount.innerHTML = feedingCountValue;
-}
-if (localStorage.getItem("earningCoinCointValue")) {
-  earningCoinCointValue = +localStorage.getItem("earningCoinCointValue");
-  earningCoinCoint.textContent = earningCoinCointValue;
-}
-if (localStorage.getItem("expenseFeedingCointValue")) {
-  expenseFeedingCointValue = +localStorage.getItem("expenseFeedingCointValue");
-  expenseFeedingCoint.innerHTML = expenseFeedingCointValue;
-}
-
-function createAnimalImage(imgSrc, left = null, top = null) {
-  let image = document.createElement("img");
-  mainContainer.appendChild(image);
-  image.src = imgSrc;
-  image.classList.add("animalImg");
-
-  const position = left && top ? { left, top } : getRandomPosition();
-  image.style.left = `${position.left}%`;
-  image.style.top = `${position.top}%`;
-
-  image.draggable = true;
-  image.style.cursor = "grab";
-  image.style.position = "absolute";
-  image.style.width = "80px";
-  image.style.height = "auto";
-  image.style.zIndex = "1";
-
-  image.addEventListener("dragstart", function (e) {
-    e.dataTransfer.setData("text/plain", "");
-    this.style.cursor = "grabbing";
-    this.style.zIndex = 1000;
-
-    this.startX = e.clientX;
-    this.startY = e.clientY;
-    this.initialLeft = parseInt(this.style.left);
-    this.initialTop = parseInt(this.style.top);
-  });
-
-  image.addEventListener("dragend", function (e) {
-    this.style.cursor = "grab";
-    this.style.zIndex = "1";
-
-    let deltaX = e.clientX - this.startX;
-    let deltaY = e.clientY - this.startY;
-
-    let newLeft = this.initialLeft + (deltaX / window.innerWidth) * 100;
-    let newTop = this.initialTop + (deltaY / window.innerHeight) * 100;
-
-    newLeft = Math.max(0, Math.min(95, newLeft));
-    newTop = Math.max(40, Math.min(95, newTop));
-
-    this.style.left = `${newLeft}%`;
-    this.style.top = `${newTop}%`;
-
-    updateAnimalPosition(this.src, newLeft, newTop);
-    updateLocalStorage();
-  });
-
-  return image;
-}
-
-function updateAnimalPosition(imgSrc, left, top) {
-  animalsArr.forEach((animal) => {
-    if (imgSrc.includes(animal.name)) {
-      const index = Array.from(
-        document.querySelectorAll(".animalImg")
-      ).findIndex((img) => img.src === imgSrc);
-
-      if (index !== -1) {
-        animal.positions[index] = { left, top };
-      }
-    }
-  });
-}
-
-// MODAL OPENING
-buyAnimalBtn.addEventListener("click", function () {
-  buyAnimalModal.style.opacity = "1";
-  buyAnimalModal.style.visibility = "visible";
-  clickAudio.play();
-});
-buyFoodBtn.addEventListener("click", function () {
-  buyFeedingModal.style.opacity = "1";
-  buyFeedingModal.style.visibility = "visible";
-  clickAudio.play();
-});
-buyDecorationBtn.addEventListener("click", function () {
-  buyDecorationModal.style.opacity = "1";
-  buyDecorationModal.style.visibility = "visible";
-  clickAudio.play();
-});
-infoBtn.addEventListener("click", function () {
-  infoModal.style.opacity = "1";
-  infoModal.style.visibility = "visible";
-  clickAudio.play();
-});
-closeAnimalModalBtn.addEventListener("click", function () {
-  buyAnimalModal.style.opacity = "0";
-  buyAnimalModal.style.visibility = "hidden";
-  clickAudio.play();
-});
-closeFeedingModal.addEventListener("click", function () {
-  buyFeedingModal.style.opacity = "0";
-  buyFeedingModal.style.visibility = "hidden";
-  clickAudio.play();
-});
-closeDecorationModalBtn.addEventListener("click", function () {
-  buyDecorationModal.style.opacity = "0";
-  buyDecorationModal.style.visibility = "hidden";
-  clickAudio.play();
-});
-closeInfoBtn.addEventListener("click", function () {
-  infoModal.style.opacity = "0";
-  infoModal.style.visibility = "hidden";
-  clickAudio.play();
-});
-
-usingInterval();
-
-// BUY ANIMALS
-buyTheAnimal.forEach((btn) => {
-  btn.addEventListener("click", function () {
-    animalsArr.forEach((animal) => {
-      if (btn.id == animal.name) {
-        if (animal.price <= coinCountValue) {
-          clickAudio.play();
-          coinCountValue = coinCountValue - animal.price;
-          animal.count++;
-
-          const position = getRandomPosition();
-          animal.positions.push({ left: position.left, top: position.top });
-
-          coinCount.innerHTML = coinCountValue;
-          let animalSound = new Audio(animal.sound);
-          animalSound.play();
-
-          switch (animal.name) {
-            case "chicken":
-              chickenHeading.children[1].textContent = animal.count;
-              chickenHeading.style.display = "flex";
-              break;
-            case "sheep":
-              sheepHeading.children[1].textContent = animal.count;
-              sheepHeading.style.display = "flex";
-              break;
-            case "cow":
-              cowHeading.children[1].textContent = animal.count;
-              cowHeading.style.display = "flex";
-              break;
-            default:
-              break;
-          }
-
-          createAnimalImage(animal.img, position.left, position.top);
-
-          earningCoinCointValue = 0;
-          expenseFeedingCointValue = 0;
-        } else {
-          alert("Not enough coins!");
-        }
-      }
-    });
-
-    animalsArr.forEach((animal) => {
-      earningCoinCointValue += +animal.value * +animal.count;
-      expenseFeedingCointValue += +animal.feedingKg * +animal.count;
-      earningCoinCoint.textContent = earningCoinCointValue;
-      expenseFeedingCoint.innerHTML = expenseFeedingCointValue;
-      updateLocalStorage();
-    });
-
-    updateLocalStorage();
-  });
-});
-
-// BUY FOOD
-buyFeedings.forEach((btn) => {
-  btn.addEventListener("click", function () {
-    switch (+btn.id) {
-      case 50:
-        if (10 <= coinCountValue) {
-          clickAudio.play();
-          feedingCountValue += 50;
-          coinCountValue -= 10;
-        } else {
-          alert("Not enough coins!");
-        }
-        break;
-      case 100:
-        if (18 <= coinCountValue) {
-          clickAudio.play();
-          feedingCountValue += 100;
-          coinCountValue -= 18;
-        } else {
-          alert("Not enough coins!");
-        }
-        break;
-      case 500:
-        if (80 <= coinCountValue) {
-          clickAudio.play();
-          feedingCountValue += 500;
-          coinCountValue -= 80;
-        } else {
-          alert("Not enough coins!");
-        }
-        break;
-      default:
-        break;
-    }
-    coinCount.innerHTML = coinCountValue;
-    feedingCount.innerHTML = feedingCountValue;
-    if (feedingCountValue > 0) {
-      clearInterval(myInterval);
-      usingInterval();
-    }
-    updateLocalStorage();
-  });
-});
-
-// BUY DECORATIONS
-let buyDecorations = document.querySelectorAll(".buyDecorations");
+let decorationsArr = [];
 let decorationImages = [
-  "./assets/imgs/dec1.jpeg",
+  "./assets/imgs/dec1.webp",
   "./assets/imgs/dec2.webp",
   "./assets/imgs/dec3.webp",
   "./assets/imgs/dec4.webp",
@@ -337,52 +78,274 @@ let decorationImages = [
   "./assets/imgs/dec10.webp",
 ];
 
-buyDecorations.forEach((btn, index) => {
+function getAnimalPosition() {
+  return {
+    top: 40 + Math.random() * 55,
+    left: 7 + Math.random() * 90,
+  };
+}
+
+function getDecorationPosition() {
+  return {
+    top: 40 + Math.random() * 55,
+    left: 7 + Math.random() * 90,
+  };
+}
+
+function loadFromLocalStorage() {
+  if (JSON.parse(localStorage.getItem("animalsArr"))) {
+    animalsArr = JSON.parse(localStorage.getItem("animalsArr"));
+    animalsArr.forEach((animal, animalIndex) => {
+      switch (animal.name) {
+        case "chicken":
+          chickenHeading.children[1].textContent = animal.count;
+          chickenHeading.style.display = "flex";
+          break;
+        case "sheep":
+          sheepHeading.children[1].textContent = animal.count;
+          sheepHeading.style.display = "flex";
+          break;
+        case "cow":
+          cowHeading.children[1].textContent = animal.count;
+          cowHeading.style.display = "flex";
+          break;
+      }
+
+      animal.positions.forEach((pos, positionIndex) => {
+        const animalImg = createAnimalImage(animal.img, pos.left, pos.top);
+        animalImg.dataset.animalIndex = animalIndex;
+        animalImg.dataset.positionIndex = positionIndex;
+      });
+    });
+  }
+
+  if (JSON.parse(localStorage.getItem("decorationsArr"))) {
+    decorationsArr = JSON.parse(localStorage.getItem("decorationsArr"));
+    decorationsArr.forEach((dec, index) => {
+      const decoration = createDecoration(dec.imgSrc, dec.left, dec.top);
+      decoration.dataset.positionId = index;
+    });
+  }
+
+  if (localStorage.getItem("coinCount")) {
+    coinCountValue = +localStorage.getItem("coinCount");
+    coinCount.innerHTML = coinCountValue;
+  }
+  if (localStorage.getItem("feedingCount")) {
+    feedingCountValue = +localStorage.getItem("feedingCount");
+    feedingCount.innerHTML = feedingCountValue;
+  }
+  if (localStorage.getItem("earningCoinCointValue")) {
+    earningCoinCointValue = +localStorage.getItem("earningCoinCointValue");
+    earningCoinCoint.textContent = earningCoinCointValue;
+  }
+  if (localStorage.getItem("expenseFeedingCointValue")) {
+    expenseFeedingCointValue = +localStorage.getItem(
+      "expenseFeedingCointValue"
+    );
+    expenseFeedingCoint.innerHTML = expenseFeedingCointValue;
+  }
+}
+
+function createAnimalImage(imgSrc, left, top) {
+  const image = document.createElement("img");
+  image.src = imgSrc;
+  image.classList.add("animalImg");
+  image.style.left = `${left}%`;
+  image.style.top = `${top}%`;
+  image.style.position = "absolute";
+  image.style.width = "80px";
+  image.style.height = "auto";
+  image.style.zIndex = "1";
+  image.draggable = true;
+
+  image.addEventListener("dragstart", function (e) {
+    e.dataTransfer.setData("text/plain", "");
+    this.style.cursor = "grabbing";
+    this.style.zIndex = 1000;
+    this.startX = e.clientX;
+    this.startY = e.clientY;
+    this.initialLeft = parseFloat(this.style.left);
+    this.initialTop = parseFloat(this.style.top);
+  });
+
+  image.addEventListener("dragend", function (e) {
+    this.style.cursor = "grab";
+    this.style.zIndex = "1";
+
+    const deltaX = e.clientX - this.startX;
+    const deltaY = e.clientY - this.startY;
+    let newLeft = this.initialLeft + (deltaX / window.innerWidth) * 100;
+    let newTop = this.initialTop + (deltaY / window.innerHeight) * 100;
+
+    newLeft = Math.max(5, Math.min(93, newLeft));
+    newTop = Math.max(40, Math.min(90, newTop));
+
+    this.style.left = `${newLeft}%`;
+    this.style.top = `${newTop}%`;
+
+    const animalIndex = parseInt(this.dataset.animalIndex);
+    const positionIndex = parseInt(this.dataset.positionIndex);
+
+    if (!isNaN(animalIndex) && !isNaN(positionIndex)) {
+      animalsArr[animalIndex].positions[positionIndex] = {
+        left: newLeft,
+        top: newTop,
+      };
+      updateLocalStorage();
+    }
+  });
+
+  mainContainer.appendChild(image);
+  return image;
+}
+
+function createDecoration(imgSrc, left, top) {
+  const decoration = document.createElement("img");
+  decoration.src = imgSrc;
+  decoration.classList.add("decoration");
+  decoration.style.left = `${left}%`;
+  decoration.style.top = `${top}%`;
+  decoration.style.position = "absolute";
+  decoration.style.width = "100px";
+  decoration.style.height = "auto";
+  decoration.style.zIndex = "1";
+  decoration.draggable = true;
+
+  decoration.addEventListener("dragstart", function (e) {
+    e.dataTransfer.setData("text/plain", "");
+    this.style.cursor = "grabbing";
+    this.style.zIndex = 1000;
+    this.startX = e.clientX;
+    this.startY = e.clientY;
+    this.initialLeft = parseFloat(this.style.left);
+    this.initialTop = parseFloat(this.style.top);
+  });
+
+  decoration.addEventListener("dragend", function (e) {
+    this.style.cursor = "grab";
+    this.style.zIndex = "1";
+
+    const deltaX = e.clientX - this.startX;
+    const deltaY = e.clientY - this.startY;
+    let newLeft = this.initialLeft + (deltaX / window.innerWidth) * 100;
+    let newTop = this.initialTop + (deltaY / window.innerHeight) * 100;
+
+    newLeft = Math.max(5, Math.min(90, newLeft));
+    newTop = Math.max(40, Math.min(90, newTop));
+
+    this.style.left = `${newLeft}%`;
+    this.style.top = `${newTop}%`;
+
+    if (this.dataset.positionId !== undefined) {
+      decorationsArr[this.dataset.positionId] = {
+        imgSrc,
+        left: newLeft,
+        top: newTop,
+      };
+      updateLocalStorage();
+    }
+  });
+
+  mainContainer.appendChild(decoration);
+  return decoration;
+}
+
+function updateLocalStorage() {
+  localStorage.setItem("animalsArr", JSON.stringify(animalsArr));
+  localStorage.setItem("decorationsArr", JSON.stringify(decorationsArr));
+  localStorage.setItem("coinCount", coinCountValue);
+  localStorage.setItem("feedingCount", feedingCountValue);
+  localStorage.setItem("earningCoinCointValue", earningCoinCointValue);
+  localStorage.setItem("expenseFeedingCointValue", expenseFeedingCointValue);
+}
+
+buyAnimalBtn.addEventListener("click", () => toggleModal(buyAnimalModal));
+buyFoodBtn.addEventListener("click", () => toggleModal(buyFeedingModal));
+buyDecorationBtn.addEventListener("click", () =>
+  toggleModal(buyDecorationModal)
+);
+infoBtn.addEventListener("click", () => toggleModal(infoModal));
+
+closeAnimalModalBtn.addEventListener("click", () =>
+  toggleModal(buyAnimalModal)
+);
+closeFeedingModal.addEventListener("click", () => toggleModal(buyFeedingModal));
+closeDecorationModalBtn.addEventListener("click", () =>
+  toggleModal(buyDecorationModal)
+);
+closeInfoBtn.addEventListener("click", () => toggleModal(infoModal));
+
+function toggleModal(modal) {
+  modal.style.opacity = modal.style.opacity === "1" ? "0" : "1";
+  modal.style.visibility =
+    modal.style.visibility === "visible" ? "hidden" : "visible";
+  clickAudio.play();
+}
+
+buyTheAnimal.forEach((btn) => {
   btn.addEventListener("click", function () {
-    let price = parseInt(btn.previousElementSibling.textContent);
+    animalsArr.forEach((animal, animalIndex) => {
+      if (btn.id === animal.name && animal.price <= coinCountValue) {
+        clickAudio.play();
+        coinCountValue -= animal.price;
+        animal.count++;
 
-    if (price <= coinCountValue) {
+        const position = getAnimalPosition();
+        animal.positions.push(position);
+        const animalImg = createAnimalImage(
+          animal.img,
+          position.left,
+          position.top
+        );
+        animalImg.dataset.animalIndex = animalIndex;
+        animalImg.dataset.positionIndex = animal.positions.length - 1;
+
+        updateAnimalUI(animal);
+        updateEarnings();
+        updateLocalStorage();
+      } else if (btn.id === animal.name) {
+        alert("Not enough coins!");
+      }
+    });
+  });
+});
+
+function updateAnimalUI(animal) {
+  switch (animal.name) {
+    case "chicken":
+      chickenHeading.children[1].textContent = animal.count;
+      chickenHeading.style.display = "flex";
+      break;
+    case "sheep":
+      sheepHeading.children[1].textContent = animal.count;
+      sheepHeading.style.display = "flex";
+      break;
+    case "cow":
+      cowHeading.children[1].textContent = animal.count;
+      cowHeading.style.display = "flex";
+      break;
+  }
+  coinCount.innerHTML = coinCountValue;
+  new Audio(animal.sound).play();
+}
+
+buyFeedings.forEach((btn) => {
+  btn.addEventListener("click", function () {
+    const amount = +btn.id;
+    const prices = { 50: 10, 100: 18, 500: 80 };
+
+    if (prices[amount] <= coinCountValue) {
       clickAudio.play();
-      coinCountValue -= price;
+      feedingCountValue += amount;
+      coinCountValue -= prices[amount];
+
       coinCount.innerHTML = coinCountValue;
+      feedingCount.innerHTML = feedingCountValue;
 
-      let decoration = document.createElement("img");
-      decoration.src = decorationImages[index];
-      decoration.classList.add("decoration");
-      decoration.draggable = true;
-
-      const position = getRandomPosition();
-      decoration.style.position = "absolute";
-      decoration.style.top = `${position.top}%`;
-      decoration.style.left = `${position.left}%`;
-      decoration.style.width = "100px";
-      decoration.style.height = "auto";
-      decoration.style.zIndex = "1";
-
-      decoration.addEventListener("dragstart", function (e) {
-        e.dataTransfer.setData("text/plain", "");
-        this.style.cursor = "grabbing";
-        this.style.zIndex = 1000;
-        this.startX = e.clientX;
-        this.startY = e.clientY;
-        this.initialLeft = parseInt(this.style.left);
-        this.initialTop = parseInt(this.style.top);
-      });
-
-      decoration.addEventListener("dragend", function (e) {
-        this.style.cursor = "grab";
-        this.style.zIndex = "1";
-        let deltaX = e.clientX - this.startX;
-        let deltaY = e.clientY - this.startY;
-        let newLeft = this.initialLeft + (deltaX / window.innerWidth) * 100;
-        let newTop = this.initialTop + (deltaY / window.innerHeight) * 100;
-        newLeft = Math.max(0, Math.min(90, newLeft));
-        newTop = Math.max(40, Math.min(90, newTop));
-        this.style.left = `${newLeft}%`;
-        this.style.top = `${newTop}%`;
-      });
-
-      mainContainer.appendChild(decoration);
+      if (feedingCountValue > 0 && !myInterval) {
+        usingInterval();
+      }
       updateLocalStorage();
     } else {
       alert("Not enough coins!");
@@ -390,30 +353,73 @@ buyDecorations.forEach((btn, index) => {
   });
 });
 
-// UPDATE LOCAL STORAGE
-function updateLocalStorage() {
-  localStorage.setItem("animalsArr", JSON.stringify(animalsArr));
-  localStorage.setItem("coinCount", coinCountValue);
-  localStorage.setItem("feedingCount", feedingCountValue);
-  localStorage.setItem("earningCoinCointValue", earningCoinCointValue);
-  localStorage.setItem("expenseFeedingCointValue", expenseFeedingCointValue);
-}
+buyDecorations.forEach((btn, index) => {
+  btn.addEventListener("click", function () {
+    const price = parseInt(btn.previousElementSibling.textContent);
 
-// USE INTERVAL
+    if (price <= coinCountValue) {
+      clickAudio.play();
+      coinCountValue -= price;
+      coinCount.innerHTML = coinCountValue;
+
+      const position = getDecorationPosition();
+      const imgSrc = decorationImages[index];
+      const decoration = createDecoration(imgSrc, position.left, position.top);
+      decorationsArr.push({ imgSrc, left: position.left, top: position.top });
+      decoration.dataset.positionId = decorationsArr.length - 1;
+
+      updateLocalStorage();
+    } else {
+      alert("Not enough coins!");
+    }
+  });
+});
+
 function usingInterval() {
+  clearInterval(myInterval);
   myInterval = setInterval(() => {
     animalsArr.forEach((animal) => {
-      coinCountValue += +animal.value * +animal.count;
-      feedingCountValue -= +animal.feedingKg * +animal.count;
+      coinCountValue += animal.value * animal.count;
+
+      const feedingCost = animal.feedingKg * animal.count;
+      if (feedingCountValue >= feedingCost) {
+        feedingCountValue -= feedingCost;
+      } else {
+        feedingCountValue = 0;
+      }
     });
 
-    if (feedingCountValue < 0) {
+    if (feedingCountValue <= 0) {
       clearInterval(myInterval);
-    } else {
-      coinCount.innerHTML = coinCountValue;
-      feedingCount.innerHTML = feedingCountValue;
-      updateLocalStorage();
+      myInterval = null;
+      alert("Out of feed! Purchase more to continue.");
     }
+
+    coinCount.innerHTML = coinCountValue;
+    feedingCount.innerHTML = feedingCountValue;
+    updateEarnings();
+    updateLocalStorage();
   }, 5000);
-  updateLocalStorage();
 }
+
+function updateEarnings() {
+  earningCoinCointValue = animalsArr.reduce(
+    (sum, animal) => sum + animal.value * animal.count,
+    0
+  );
+  expenseFeedingCointValue = animalsArr.reduce(
+    (sum, animal) => sum + animal.feedingKg * animal.count,
+    0
+  );
+
+  earningCoinCoint.textContent = earningCoinCointValue;
+  expenseFeedingCoint.innerHTML = expenseFeedingCointValue;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadFromLocalStorage();
+  if (feedingCountValue > 0) {
+    usingInterval();
+  }
+  updateEarnings();
+});
