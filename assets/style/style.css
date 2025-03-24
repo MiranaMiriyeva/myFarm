@@ -7,7 +7,7 @@
 .mainContainer {
   min-height: 100vh;
   position: relative;
-  background-image: url("farmImg.webp");
+  background-image: url("/assets/imgs/farmImg.webp");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -109,6 +109,24 @@
   animation-iteration-count: infinite;
   cursor: pointer;
 }
+.buyDecorationBtn {
+  background-color: #ffffff70;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 18px;
+  position: absolute;
+  top: 20%;
+  right: 1%;
+  transform: translate(-50%, -50%);
+  animation-name: buyDecorationAnimation;
+  animation-duration: 2000ms;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  cursor: pointer;
+}
 @keyframes buyAnimalAnimation {
   0% {
     top: 50%;
@@ -131,7 +149,17 @@
     top: 40%;
   }
 }
-
+@keyframes buyDecorationAnimation {
+  0% {
+    top: 40%;
+  }
+  50% {
+    top: 38%;
+  }
+  100% {
+    top: 40%;
+  }
+}
 .animalImg {
   width: 70px;
   position: absolute;
@@ -155,6 +183,7 @@
   opacity: 0;
   visibility: hidden;
   transition-duration: 400ms;
+  z-index: 9;
 }
 .animalModalContainer {
   position: relative;
@@ -228,6 +257,7 @@
   opacity: 0;
   visibility: hidden;
   transition-duration: 400ms;
+  z-index: 9;
 }
 .feedingModalContainer {
   position: relative;
@@ -290,4 +320,129 @@
   border: 1px solid red;
   color: red;
   cursor: pointer;
+}
+
+/*  DECORATION */
+.buyDecorationModal {
+  background-color: #fff;
+  width: 400px;
+  max-height: 500px;
+  padding: 50px;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border-radius: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition-duration: 400ms;
+  z-index: 9;
+  overflow-y: scroll;
+}
+.decorationModalContainer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.buyDecorationModal .decorationModalContainer h2 {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+.buyDecorationModal .decorationModalContainer img {
+  width: 100px;
+}
+.buyDecorationModal .decorationModalContainer .decorationConatiner {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buyDecorationModal .decorationModalContainer .decorationConatiner div {
+  width: 100%;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: end;
+}
+
+.buyDecorationModal .decorationModalContainer .decorationConatiner div img {
+  width: 30px;
+}
+.buyDecorationModal .decorationModalContainer .decorationConatiner span {
+  margin-left: 10px;
+}
+.buyDecorationModal .decorationModalContainer .decorationConatiner div button {
+  padding: 5px 10px;
+  background: #fff;
+  border: 1px solid green;
+  color: green;
+  cursor: pointer;
+  transition-duration: 200ms;
+  border-radius: 2px;
+  margin-left: 10px;
+}
+.buyDecorationModal
+  .decorationModalContainer
+  .decorationConatiner
+  div
+  button:hover {
+  background: green;
+  color: #fff;
+  transform: scale(1.1);
+}
+.closeDecorationModal {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  padding: 5px 8px;
+  border-radius: 50%;
+  border: 1px solid red;
+  color: red;
+  cursor: pointer;
+}
+.decoration {
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.1s;
+}
+
+.decoration:active {
+  cursor: grabbing;
+}
+
+.decoration:hover {
+  transform: scale(1.05);
+}
+.animalImg {
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.1s;
+  position: absolute;
+  width: 80px;
+  height: auto;
+}
+
+.animalImg:active {
+  cursor: grabbing;
+}
+
+.animalImg:hover {
+  transform: scale(1.05);
+}
+@media only screen and(max-width:500px) {
+  .buyAnimalModal {
+    top: 0%;
+  }
+  .buyDecorationModal {
+    top: 0%;
+  }
+  .buyFeedingModal {
+    top: 0%;
+  }
 }
